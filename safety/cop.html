@@ -1,0 +1,280 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Declarative Programming - Substrate Recipes</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Substrate runtime design patterns">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body class="light">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">var path_to_root = "../";</script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { } 
+            if (theme === null || theme === undefined) { theme = 'light'; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <ol class="chapter"><li><a href="../intro/index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../intro/motivation.html"><strong aria-hidden="true">2.</strong> Motivation</a></li><li><a href="../setup/index.html"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li><a href="../event/index.html"><strong aria-hidden="true">4.</strong> Event Recipes</a></li><li><ol class="section"><li><a href="../event/adder.html"><strong aria-hidden="true">4.1.</strong> Adding Machine</a></li><li><a href="../event/balance.html"><strong aria-hidden="true">4.2.</strong> Incrementing Balances</a></li><li><a href="../event/permissioned.html"><strong aria-hidden="true">4.3.</strong> Permissioned Function with Generic Event</a></li></ol></li><li><a href="../storage/index.html"><strong aria-hidden="true">5.</strong> Storage Recipes</a></li><li><ol class="section"><li><a href="../storage/value.html"><strong aria-hidden="true">5.1.</strong> Single Value Storage</a></li><li><a href="../storage/token.html"><strong aria-hidden="true">5.2.</strong> Simple Token Transfer</a></li><li><a href="../storage/list.html"><strong aria-hidden="true">5.3.</strong> Lists as Maps</a></li><li><a href="../storage/structs.html"><strong aria-hidden="true">5.4.</strong> Nested Structs</a></li><li><a href="../storage/social.html"><strong aria-hidden="true">5.5.</strong> Naive Social Network</a></li></ol></li><li><a href="../module_menu/index.html"><strong aria-hidden="true">6.</strong> Module Menu</a></li><li><a href="../safety/index.html"><strong aria-hidden="true">7.</strong> Safety and Optimization</a></li><li><ol class="section"><li><a href="../safety/cop.html" class="active"><strong aria-hidden="true">7.1.</strong> Declarative Programming</a></li><li><a href="../safety/optimizations.html"><strong aria-hidden="true">7.2.</strong> Optimizations</a></li></ol></li><li><a href="../dessert/index.html"><strong aria-hidden="true">8.</strong> Open Source Dessert</a></li></ol>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light <span class="default">(default)</span></button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">Substrate Recipes</h1> 
+
+                        <div class="right-buttons">
+                            <a href="../print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <a class="header" href="#declarative-programming" id="declarative-programming"><h1>Declarative Programming</h1></a>
+<p>Within each runtime module function, it is important to perform all checks prior to any storage changes. When coding on most smart contract platforms, the stakes are lower because panics on contract calls will revert any storage changes. Conversely, Substrate requires greater attention to detail because mid-function panics will persist any prior changes made to storage.</p>
+<ul>
+<li><a href="#ensure">Using the Ensure Macro</a></li>
+<li><a href="#verify">Verifying Signed Messages</a></li>
+<li><a href="#collide">Checking for Collisions</a></li>
+</ul>
+<a class="header" href="#using-the-ensure-macro-a-name--ensurea" id="using-the-ensure-macro-a-name--ensurea"><h2>Using the Ensure Macro <a name = "ensure"></a></h2></a>
+<p><strong>Substrate developers should use <a href="https://crates.parity.io/srml_support/macro.ensure.html"><code>ensure!</code></a> checks at the top of each runtime function's logic to verify that all of the requisite checks pass before performing any storage changes.</strong> <em>Note that this is similar to <a href="https://ethereum.stackexchange.com/questions/15166/difference-between-require-and-assert-and-the-difference-between-revert-and-thro"><code>require()</code></a> checks at the top of function bodies in Solidity contracts.</em></p>
+<p>The <a href="../storage/social.html#naive">Social Network</a> recipe demonstrated how we can create separate runtime methods to verify necessary conditions in the main methods.</p>
+<pre><pre class="playpen"><code class="language-rust">
+# #![allow(unused_variables)]
+#fn main() {
+impl&lt;T: Trait&gt; Module&lt;T&gt; {
+  pub fn friend_exists(current: T::AccountId, friend: T::AccountId) -&gt; bool {
+    // search for friend in AllFriends vector
+    &lt;AllFriends&lt;T&gt;&gt;::get(current).iter()
+          .any(|&amp;ref a| a == &amp;friend)
+  }
+
+  pub fn is_blocked(current: T::AccountId, other_user: T::AccountId) -&gt; bool {
+    // search for friend in Blocked vector
+    &lt;Blocked&lt;T&gt;&gt;::get(current).iter()
+          .any(|&amp;ref a| a == &amp;other_user)
+  }
+}
+#}</code></pre></pre>
+<p>&quot;<em>By returning <code>bool</code>, we can easily use these methods in <code>ensure!</code> statements to verify relevant state conditions before making requests in the main runtime methods.</em>&quot;</p>
+<pre><pre class="playpen"><code class="language-rust">
+# #![allow(unused_variables)]
+#fn main() {
+// in the remove_friend method
+ensure!(Self::friend_exists(user.clone(), old_friend.clone()), &quot;old friend is not a friend&quot;);
+
+...
+// in the block method
+ensure!(!Self::is_blocked(user.clone(), blocked_user.clone()), &quot;user is already blocked&quot;);
+#}</code></pre></pre>
+<p>Indeed, this pattern of extracting runtime checks into separate functions and invoking the <code>ensure</code> macro in their place is useful. It produces readable code and encourages targeted testing to more easily identify the source of logic errors.</p>
+<p><em>For a deeper dive into the &quot;Verify First, Write Last&quot; pattern, see the relevant section in the <a href="https://github.com/shawntabrizi/substrate-collectables-workshop/blob/master/3/buying-a-kitty.md#remember-verify-first-write-last">Substrate Collectables tutorial</a> as well as <a href="https://docs.substrate.dev/docs/tcr-tutorial-best-practices">Substrate Best Practices</a>. This <a href="https://github.com/shawntabrizi/substrate-collectables-workshop/pull/55#discussion_r258147961">github comment</a> is also very useful for visualizing the declarative pattern in practice.</em></p>
+<p><strong>Bonus Reading</strong></p>
+<ul>
+<li><a href="https://blog.nelhage.com/2016/03/design-for-testability/">Design for Testability</a></li>
+<li><a href="https://www.parity.io/condition-oriented-programming/">Condition-Oriented Programming</a></li>
+<li><a href="https://www.tokendaily.co/blog/declarative-smart-contracts">Declarative Smart Contracts</a></li>
+</ul>
+<a class="header" href="#verifying-signed-messages-a-name--verifya" id="verifying-signed-messages-a-name--verifya"><h2>Verifying Signed Messages <a name = "verify"></a></h2></a>
+<p>It is often useful to designate some functions as permissioned and, therefore, accessible only to a defined group. In this case, we check that the transaction that invokes the runtime function is signed before verifying that the signature corresponds to a member of the permissioned set.</p>
+<pre><pre class="playpen"><code class="language-rust">
+# #![allow(unused_variables)]
+#fn main() {
+let who = ensure_signed(origin)?;
+ensure!(Self::is_member(&amp;who), &quot;user is not a member of the group&quot;);
+#}</code></pre></pre>
+<p>We can define <code>is_member</code> similar to the helper methods in the <a href="../storage/social.html#naive">Social Network</a> recipe by defining a vector of <code>AccountId</code>s (<code>current_member</code>) that contains all members. We then search this vector for the <code>AccountId</code> in question within the body of the <code>is_member</code> method.</p>
+<pre><pre class="playpen"><code class="language-rust">
+# #![allow(unused_variables)]
+#fn main() {
+impl&lt;T: Trait&gt; Module&lt;T&gt; {
+    pub fn is_member(who: &amp;T::AccountId) -&gt; bool {
+        Self::current_member().iter()
+            .any(|&amp;ref a| a == who)
+    }
+}
+#}</code></pre></pre>
+<p><em>To read more about checking for signed messages, see the relevant section in the <a href="https://shawntabrizi.github.io/substrate-collectables-workshop/#/1/storing-a-value?id=checking-for-a-signed-message">Substrate collectables tutorial</a>.</em></p>
+<a class="header" href="#checking-for-collisions-a-name--collidea" id="checking-for-collisions-a-name--collidea"><h2>Checking for Collisions <a name = "collide"></a></h2></a>
+<p>Often times we may intend for keys to be unique identifiers that map to a specific storage item. In this case, it is necessary to check for collisions before adding new entries.</p>
+<p>For example, it is common to use the hash of an object as the unique identifier in a map defined in the <code>decl_storage</code> block. Before adding a new value to the map, check that the key (hash) doesn't already have an associated value in the map. If it does, it is necessary to decide between the new item and the existing item to prevent an inadvertent key collision. In most cases, the new value is rejected.</p>
+<pre><pre class="playpen"><code class="language-rust">
+# #![allow(unused_variables)]
+#fn main() {
+fn insert_value(origin, hash: Hash, value: u32) {
+    // check that key doesn't have an associated value
+    ensure!( !(Self::map::exists(&amp;hash)), &quot;key already has an associated value&quot; );
+
+    // add key-value pair
+    &lt;Map&lt;T&gt;&gt;::insert(hash, value);
+}
+#}</code></pre></pre>
+<p><em>See how the <a href="https://shawntabrizi.com/substrate-collectables-workshop/#/2/generating-random-data?id=checking-for-collision">Substrate Collectables Tutorial</a> covers this pattern.</em></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="../safety/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="../safety/optimizations.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="../safety/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="../safety/optimizations.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>

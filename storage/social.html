@@ -1,0 +1,284 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Naive Social Network - Substrate Recipes</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Substrate runtime design patterns">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body class="light">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">var path_to_root = "../";</script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { } 
+            if (theme === null || theme === undefined) { theme = 'light'; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <ol class="chapter"><li><a href="../intro/index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../intro/motivation.html"><strong aria-hidden="true">2.</strong> Motivation</a></li><li><a href="../setup/index.html"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li><a href="../event/index.html"><strong aria-hidden="true">4.</strong> Event Recipes</a></li><li><ol class="section"><li><a href="../event/adder.html"><strong aria-hidden="true">4.1.</strong> Adding Machine</a></li><li><a href="../event/balance.html"><strong aria-hidden="true">4.2.</strong> Incrementing Balances</a></li><li><a href="../event/permissioned.html"><strong aria-hidden="true">4.3.</strong> Permissioned Function with Generic Event</a></li></ol></li><li><a href="../storage/index.html"><strong aria-hidden="true">5.</strong> Storage Recipes</a></li><li><ol class="section"><li><a href="../storage/value.html"><strong aria-hidden="true">5.1.</strong> Single Value Storage</a></li><li><a href="../storage/token.html"><strong aria-hidden="true">5.2.</strong> Simple Token Transfer</a></li><li><a href="../storage/list.html"><strong aria-hidden="true">5.3.</strong> Lists as Maps</a></li><li><a href="../storage/structs.html"><strong aria-hidden="true">5.4.</strong> Nested Structs</a></li><li><a href="../storage/social.html" class="active"><strong aria-hidden="true">5.5.</strong> Naive Social Network</a></li></ol></li><li><a href="../module_menu/index.html"><strong aria-hidden="true">6.</strong> Module Menu</a></li><li><a href="../safety/index.html"><strong aria-hidden="true">7.</strong> Safety and Optimization</a></li><li><ol class="section"><li><a href="../safety/cop.html"><strong aria-hidden="true">7.1.</strong> Declarative Programming</a></li><li><a href="../safety/optimizations.html"><strong aria-hidden="true">7.2.</strong> Optimizations</a></li></ol></li><li><a href="../dessert/index.html"><strong aria-hidden="true">8.</strong> Open Source Dessert</a></li></ol>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light <span class="default">(default)</span></button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">Substrate Recipes</h1> 
+
+                        <div class="right-buttons">
+                            <a href="../print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <a class="header" href="#higher-order-arrays-with-tuples-and-maps" id="higher-order-arrays-with-tuples-and-maps"><h1>Higher Order Arrays with Tuples and Maps</h1></a>
+<p><em><a href="#naive">naive social network recipe below</a> below</em></p>
+<p>To represent ownership of multiple items across multiple users, tuples can be used alongside maps in order to emulate arrays.</p>
+<p>For example, consider a scenario in which persistent storage keeps track of a <em>social network graph</em> in which each user (represented by an <code>AccountId</code>) has a list of other friends. In this case, it would be convenient to use a 2 dimensional array like</p>
+<pre><pre class="playpen"><code class="language-rust">
+# #![allow(unused_variables)]
+#fn main() {
+SocialNetwork[AccountId][Index] -&gt; AccountId
+#}</code></pre></pre>
+<p>With this data structure, check how many friends a given <code>AccountId</code> has by calling</p>
+<pre><pre class="playpen"><code class="language-rust">
+# #![allow(unused_variables)]
+#fn main() {
+SocialNetwork[AccountId].length()
+#}</code></pre></pre>
+<p>To emulate this data structure in the context of the Substrate runtime storage, use tuples and maps (declared in a <code>decl_storage!{}</code> block like previous examples):</p>
+<pre><pre class="playpen"><code class="language-rust">
+# #![allow(unused_variables)]
+#fn main() {
+MyFriend get(my_friend): map (T::AccountId, u32) =&gt; T::AccountId;
+FriendsCount get(friends_count): map T::AccountId =&gt; u32;
+#}</code></pre></pre>
+<p>Patterns that use mappings to emulate higher order data structures are common when managing runtime storage on Substrate.</p>
+<a class="header" href="#naive-social-network" id="naive-social-network"><h2>Naive Social Network</h2></a>
+<p>We can use this pattern to manage <a href="https://stackoverflow.com/questions/1453285/what-is-whitelist-and-blacklist-data">whitelists and blacklists</a>. This is especially useful in the context of social networks for adding/removing friends and blocking unfriendly participants.</p>
+<p>The relevant state transitions are encoded in the <code>decl_event</code> block</p>
+<pre><pre class="playpen"><code class="language-rust">
+# #![allow(unused_variables)]
+#fn main() {
+decl_event!(
+    pub enum Event&lt;T&gt; where AccountId = &lt;T as system::Trait&gt;::AccountId {
+      NewFriend(AccountId),
+      FriendRemoved(AccountId),
+      Blocked(AccountId),
+      UnBlocked(AccountId),
+    }
+);
+#}</code></pre></pre>
+<p>Our storage items contain a higher order array represented by the items described previously.</p>
+<pre><pre class="playpen"><code class="language-rust">
+# #![allow(unused_variables)]
+#fn main() {
+decl_storage! {
+  trait Store for Module&lt;T: Trait&gt; as SocialNetwork {
+    MyFriend get(my_friend): map (T::AccountId, u32) =&gt; T::AccountId;
+    FriendsCount get(friends_count): map T::AccountId =&gt; u32;
+    AllFriends get(all_friends): map T::AccountId =&gt; Vec&lt;T::AccountId&gt;;
+    Blocked get(blocked): map T::AccountId =&gt; Vec&lt;T::AccountId&gt;;
+  }
+}
+#}</code></pre></pre>
+<p>We also include two vectors for a user's friends and the participants that they have blocked. These vectors are convenient when paired with runtime methods for verifying membership.</p>
+<pre><pre class="playpen"><code class="language-rust">
+# #![allow(unused_variables)]
+#fn main() {
+impl&lt;T: Trait&gt; Module&lt;T&gt; {
+  pub fn friend_exists(current: T::AccountId, friend: T::AccountId) -&gt; bool {
+    // search for friend in AllFriends vector
+    &lt;AllFriends&lt;T&gt;&gt;::get(current).iter()
+          .any(|&amp;ref a| a == &amp;friend)
+  }
+
+  pub fn is_blocked(current: T::AccountId, other_user: T::AccountId) -&gt; bool {
+    // search for friend in Blocked vector
+    &lt;Blocked&lt;T&gt;&gt;::get(current).iter()
+          .any(|&amp;ref a| a == &amp;other_user)
+  }
+}
+#}</code></pre></pre>
+<p>By returning <code>bool</code>, we can easily use these methods in <code>ensure!</code> statements to verify relevant state conditions before making requests in the main runtime methods. For example, in the <code>remove_friend</code> runtime method, we need to ensure that the friend to be removed is an existing friend.</p>
+<pre><pre class="playpen"><code class="language-rust">
+# #![allow(unused_variables)]
+#fn main() {
+ensure!(Self::friend_exists(user.clone(), old_friend.clone()), &quot;old friend is not a friend&quot;);
+#}</code></pre></pre>
+<p>Similarly, when we block a user, we should check that the user isn't already blocked.</p>
+<pre><pre class="playpen"><code class="language-rust">
+# #![allow(unused_variables)]
+#fn main() {
+ensure!(!Self::is_blocked(user.clone(), blocked_user.clone()), &quot;user is already blocked&quot;);
+#}</code></pre></pre>
+<p>The full logic for this sample can be found in the <a href="https://github.com/substrate-developer-hub/recipes/tree/master/kitchen">kitchen</a> in <code>storage/arrays</code>.</p>
+<!-- **TODO: update link once pushed** -->
+<p><em>To see another example of how to use tuplies to emulate higher order arrays, see the <a href="https://shawntabrizi.github.io/substrate-collectables-workshop/#/2/owning-multiple-kitties?id=using-tuples-to-emulate-higher-order-arrays">Substrate Collectables Tutorial</a>.</em></p>
+<p><strong>NOTE</strong>: <a href="https://crates.parity.io/srml_support/storage/trait.StorageDoubleMap.html">DoubleMap</a> is a map with two keys; this storage item may also be useful for implementing higher order arrays</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="../storage/structs.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="../module_menu/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="../storage/structs.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="../module_menu/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>

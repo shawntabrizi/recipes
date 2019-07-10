@@ -1,0 +1,227 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Motivation - Substrate Recipes</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Substrate runtime design patterns">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body class="light">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">var path_to_root = "../";</script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { } 
+            if (theme === null || theme === undefined) { theme = 'light'; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <ol class="chapter"><li><a href="../intro/index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../intro/motivation.html" class="active"><strong aria-hidden="true">2.</strong> Motivation</a></li><li><a href="../setup/index.html"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li><a href="../event/index.html"><strong aria-hidden="true">4.</strong> Event Recipes</a></li><li><ol class="section"><li><a href="../event/adder.html"><strong aria-hidden="true">4.1.</strong> Adding Machine</a></li><li><a href="../event/balance.html"><strong aria-hidden="true">4.2.</strong> Incrementing Balances</a></li><li><a href="../event/permissioned.html"><strong aria-hidden="true">4.3.</strong> Permissioned Function with Generic Event</a></li></ol></li><li><a href="../storage/index.html"><strong aria-hidden="true">5.</strong> Storage Recipes</a></li><li><ol class="section"><li><a href="../storage/value.html"><strong aria-hidden="true">5.1.</strong> Single Value Storage</a></li><li><a href="../storage/token.html"><strong aria-hidden="true">5.2.</strong> Simple Token Transfer</a></li><li><a href="../storage/list.html"><strong aria-hidden="true">5.3.</strong> Lists as Maps</a></li><li><a href="../storage/structs.html"><strong aria-hidden="true">5.4.</strong> Nested Structs</a></li><li><a href="../storage/social.html"><strong aria-hidden="true">5.5.</strong> Naive Social Network</a></li></ol></li><li><a href="../module_menu/index.html"><strong aria-hidden="true">6.</strong> Module Menu</a></li><li><a href="../safety/index.html"><strong aria-hidden="true">7.</strong> Safety and Optimization</a></li><li><ol class="section"><li><a href="../safety/cop.html"><strong aria-hidden="true">7.1.</strong> Declarative Programming</a></li><li><a href="../safety/optimizations.html"><strong aria-hidden="true">7.2.</strong> Optimizations</a></li></ol></li><li><a href="../dessert/index.html"><strong aria-hidden="true">8.</strong> Open Source Dessert</a></li></ol>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light <span class="default">(default)</span></button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">Substrate Recipes</h1> 
+
+                        <div class="right-buttons">
+                            <a href="../print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <a class="header" href="#getting-started" id="getting-started"><h1>Getting Started</h1></a>
+<p>If you're here, you probably already know about <a href="https://github.com/paritytech/substrate">Substrate</a> and are ready to start building. If not, I recommend visiting the <a href="https://substrate.dev">official documentation</a>. For a high level overview, read these blog posts:</p>
+<ul>
+<li><a href="https://www.parity.io/what-is-substrate/">What is Substrate?</a></li>
+<li><a href="https://www.parity.io/substrate-in-a-nutshell/">Substrate in a nutshell</a></li>
+<li><a href="https://www.parity.io/a-brief-summary-of-everything-substrate-polkadot/">A brief summary of everything Substrate and Polkadot</a></li>
+</ul>
+<a class="header" href="#how-to-use-this-book" id="how-to-use-this-book"><h2>How to Use This Book</h2></a>
+<p>Start by cloning the repo on github:</p>
+<pre><code class="language-bash">git clone https://github.com/substrate-developer-hub/recipes
+</code></pre>
+<p>As you read through the book, practice compiling and testing recipes in <a href="https://github.com/substrate-developer-hub/recipes/tree/master/kitchen"><code>recipes/kitchen</code></a>. You can't learn how to code by reading about it -- play with the code in the kitchen, extract patterns, and apply them to a problem that you want to solve!</p>
+<p>You can read the book chronologically or jump around. Personally, I prefer jumping around, but people learn in different ways :)</p>
+<p>Regardless of the approach you take, it is useful to recognize that <a href="https://youtu.be/05H4YsyPA-U?t=1789">coding is all about abstraction</a>. To accelerate your progress, I recommend skimming the patterns in this book, composing them into interesting projects, and abstracting your own unique recipes. Feel free to reach out for guidance on <a href="https://stackoverflow.com/questions/tagged/substrate">Stack Overflow</a> or in  the <a href="https://riot.im/app/#/room/#substrate-technical:matrix.org">Substrate Technical Riot channel</a>.</p>
+<a class="header" href="#chefs-choice" id="chefs-choice"><h2>Chef's Choice</h2></a>
+<p>My favorite recipes include</p>
+<ul>
+<li><a href="../storage/token.html">Simple Token Transfers</a></li>
+<li><a href="../storage/structs.html">Nested Structs</a></li>
+<li><a href="../safety/cop.html">Declarative Programming</a></li>
+<li><a href="../advanced/optimizations.html">Optimization Tricks</a></li>
+</ul>
+<a class="header" href="#notable-substrate-tutorials-and-projects" id="notable-substrate-tutorials-and-projects"><h3>Notable Substrate Tutorials and Projects</h3></a>
+<p><strong><a href="https://github.com/substrate-developer-hub">Substrate Developer Hub</a></strong></p>
+<p>Before anything else, I'd recommend starting with the <a href="https://github.com/shawntabrizi/substrate-collectables-workshop">Substrate Collectables tutorial</a>; it'll help you hit the ground running with an interactive sample project.</p>
+<p>To learn more about how to build novel blockchains with Substrate, check out the <a href="https://github.com/nczhu/utxo-workshop">utxo-workshop</a>.</p>
+<p>If interested in token-based mechanisms, look no further than the <a href="https://github.com/substrate-developer-hub/substrate-tcr">Substrate TCR</a>. The <a href="https://substrate.dev/docs/en/tutorials/tcr/">full tutorial</a> covers Substrate best practices.</p>
+<p>If interested in smart contracts on Substrate, check out the <a href="https://github.com/substrate-developer-hub/substrate-contracts-workshop">substrate-contracts-workshop</a>.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="../intro/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="../setup/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="../intro/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="../setup/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>

@@ -1,0 +1,313 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Optimizations - Substrate Recipes</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Substrate runtime design patterns">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body class="light">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">var path_to_root = "../";</script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { } 
+            if (theme === null || theme === undefined) { theme = 'light'; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <ol class="chapter"><li><a href="../intro/index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../intro/motivation.html"><strong aria-hidden="true">2.</strong> Motivation</a></li><li><a href="../setup/index.html"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li><a href="../event/index.html"><strong aria-hidden="true">4.</strong> Event Recipes</a></li><li><ol class="section"><li><a href="../event/adder.html"><strong aria-hidden="true">4.1.</strong> Adding Machine</a></li><li><a href="../event/balance.html"><strong aria-hidden="true">4.2.</strong> Incrementing Balances</a></li><li><a href="../event/permissioned.html"><strong aria-hidden="true">4.3.</strong> Permissioned Function with Generic Event</a></li></ol></li><li><a href="../storage/index.html"><strong aria-hidden="true">5.</strong> Storage Recipes</a></li><li><ol class="section"><li><a href="../storage/value.html"><strong aria-hidden="true">5.1.</strong> Single Value Storage</a></li><li><a href="../storage/token.html"><strong aria-hidden="true">5.2.</strong> Simple Token Transfer</a></li><li><a href="../storage/list.html"><strong aria-hidden="true">5.3.</strong> Lists as Maps</a></li><li><a href="../storage/structs.html"><strong aria-hidden="true">5.4.</strong> Nested Structs</a></li><li><a href="../storage/social.html"><strong aria-hidden="true">5.5.</strong> Naive Social Network</a></li></ol></li><li><a href="../module_menu/index.html"><strong aria-hidden="true">6.</strong> Module Menu</a></li><li><a href="../safety/index.html"><strong aria-hidden="true">7.</strong> Safety and Optimization</a></li><li><ol class="section"><li><a href="../safety/cop.html"><strong aria-hidden="true">7.1.</strong> Declarative Programming</a></li><li><a href="../safety/optimizations.html" class="active"><strong aria-hidden="true">7.2.</strong> Optimizations</a></li></ol></li><li><a href="../dessert/index.html"><strong aria-hidden="true">8.</strong> Open Source Dessert</a></li></ol>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light <span class="default">(default)</span></button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">Substrate Recipes</h1> 
+
+                        <div class="right-buttons">
+                            <a href="../print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <a class="header" href="#optimization-tricks" id="optimization-tricks"><h1>Optimization Tricks</h1></a>
+<p>Runtime overhead in Substrate corresponds to the efficiency of the underlying Rust code. Therefore, it is essential to use clean, efficient Rust patterns for performance releases. This section introduces common approaches for optimizing Rust code in general and links to resources that may guide further investigation.</p>
+<ul>
+<li><a href="#premature">Premature Optimization</a></li>
+<li><a href="#sec">Efficiency =&gt; Security</a></li>
+<li><a href="#zero">Zero-Cost Abstractions</a></li>
+<li><a href="#unsafe">Entering <code>unsafe</code> Waters 🏴‍☠️</a></li>
+<li><a href="#more">Fearless Concurrency &amp;&amp; Asynchrony</a></li>
+</ul>
+<p><strong>This section was inspired by and pulls heavily from</strong></p>
+<ul>
+<li><a href="http://troubles.md/posts/rust-optimization/">Achieving Warp Speed with Rust</a> by Jack Fransham, <a href="http://troubles.md/"><code>troubles.md</code></a></li>
+<li><a href="https://www.packtpub.com/application-development/rust-high-performance">High Performance Rust</a> by Iban Eguia Moraza</li>
+</ul>
+<a class="header" href="#premature-optimization-a-name--prematurea" id="premature-optimization-a-name--prematurea"><h2>Premature Optimization <a name = "premature"></a></h2></a>
+<p><em>Programmers waste enormous amounts of time thinking about, or worrying about, the speed of noncritical parts of their programs, and these attempts at efficiency actually have a strong negative impact when debugging and maintenance are considered. We should forget about small efficiencies, say about 97% of the time: premature optimization is the root of all evil.</em> - Page 268 of <a href="http://wiki.c2.com/?StructuredProgrammingWithGoToStatements">Structured Programming with <code>goto</code> Statements</a> by Donald Knuth</p>
+<p>Before worrying about performance optimizations, focus on <em>optimizing</em> for readability, simplicity, and maintainability. The first step when building anything is achieving basic functionality. Only after establishing a minimal viable sample is it appropriate to consider performance-based enhancements. With that said, severe inefficiency does open attack vectors for Substrate runtimes (<em>see <a href="#sec">the next section</a></em>). Moreover, the tradeoff between optimization and simplicity is not always so clear...</p>
+<p><em>A common misconception is that optimized code is necessarily more complicated, and that therefore optimization always represents a trade-off. However, in practice, better factored code often runs faster and uses less memory as well. In this regard, optimization is closely related to refactoring, since in both cases we are paying into the code so that we may draw back out again later if we need to.</em> - <a href="http://wiki.c2.com/?PrematureOptimization">src</a></p>
+<p><strong>Rust API Guidelines</strong></p>
+<ul>
+<li><a href="https://rust-lang-nursery.github.io/api-guidelines/about.html">Official Rust API Guidelines</a></li>
+<li><a href="https://github.com/rust-unofficial/patterns">Rust Unofficial Design Patterns</a></li>
+<li><a href="https://deterministic.space/elegant-apis-in-rust.html">Elegant Library API Guidelines</a> by Pascal Hertleif</li>
+</ul>
+<p>Also, use <a href="https://github.com/rust-lang/rust-clippy">clippy</a>!</p>
+<a class="header" href="#efficiency--security-in-substrate-a-name--seca" id="efficiency--security-in-substrate-a-name--seca"><h2>Efficiency =&gt; Security in Substrate <a name = "sec"></a></h2></a>
+<p>We call an algorithm <em>efficient</em> if its running time is polynomial in the size of the input, and <em>highly efficient</em> if its running time is linear in the size of the input. It is important for all on-chain algorithms to be highly efficient, because they must scale linearly as the size of the Polkadot network grows. In contrast, off-chain algorithms are only required to be efficient. - <a href="http://research.web3.foundation/en/latest/polkadot/NPoS/1.intro/">Web3 Research</a></p>
+<p><em>See <a href="https://substrate.dev/docs/en/tutorials/tcr/">Substrate Best Practices</a> for more details on how efficiency influences the runtime's economic security.</em></p>
+<p><strong>Related Reading</strong></p>
+<ul>
+<li><a href="https://www.parity.io/onwards/">Onwards; Underpriced EVM Operations</a>, September 2016</li>
+<li><a href="https://www4.comp.polyu.edu.hk/%7Ecsxluo/DoSEVM.pdf">Under-Priced DOS Attacks on Ethereum</a></li>
+</ul>
+<a class="header" href="#rust-zero-cost-abstractions-a-name--zeroa" id="rust-zero-cost-abstractions-a-name--zeroa"><h2>Rust Zero-Cost Abstractions <a name = "zero"></a></h2></a>
+<p>Substrate developers should take advantage of Rust's zero cost abstractions.</p>
+<p><em>Articles</em></p>
+<ul>
+<li><a href="https://rust-embedded.github.io/book/static-guarantees/zero-cost-abstractions.html">Abstraction without overhead: traits in Rust</a></li>
+<li><a href="https://hermanradtke.com/2015/06/22/effectively-using-iterators-in-rust.html">Effectively Using Iterators in Rust</a></li>
+<li><a href="https://rust-embedded.github.io/book/static-guarantees/zero-cost-abstractions.html">Type States</a></li>
+</ul>
+<p><em>Tweets</em></p>
+<ul>
+<li><a href="https://twitter.com/heinz_gies/status/1121490424739303425">iterate over a slice rather than a <code>vec!</code></a></li>
+</ul>
+<p><em>Video</em></p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=Sn3JklPAVLk">An introduction to structs, traits, and zero-cost abstractions</a></li>
+</ul>
+<a class="header" href="#entering-unsafe-waters---a-name--unsafea" id="entering-unsafe-waters---a-name--unsafea"><h2>Entering <code>unsafe</code> Waters 🏴‍☠️  <a name = "unsafe"></a></h2></a>
+<p><em>Please read <a href="https://doc.rust-lang.org/nomicon/">The Rustonomicon</a> before experimenting with the dark magic that is <code>unsafe</code></em></p>
+<p>To access an element in a specific position, use the <code>get()</code> method. This method performs a double bound check.</p>
+<pre><pre class="playpen"><code class="language-rust">
+# #![allow(unused_variables)]
+#fn main() {
+for arr in array_of_arrays {
+    if let Some(elem) = arr.iter().get(1738) {
+        println!(&quot;{}&quot;, elem);
+    }
+}
+#}</code></pre></pre>
+<p>The <code>.get()</code> call performs two checks:</p>
+<ol>
+<li>checks that the index will return <code>Some(elem)</code> or <code>None</code></li>
+<li>checks that the returned element is of type <code>Some</code> or <code>None</code></li>
+</ol>
+<p>If bound checking has already been performed independently of the call, we can invoke <code>.getunchecked()</code> to access the element. Although this is <code>unsafe</code> to use, it is equivalent to C/C++ indexing, thereby improving performance when we already know the element's location.</p>
+<pre><pre class="playpen"><code class="language-rust">
+# #![allow(unused_variables)]
+#fn main() {
+for arr in array_of_arrays {
+    println!(&quot;{}&quot;, unsafe { arr.get_unchecked(1738) })
+}
+#}</code></pre></pre>
+<p><strong>NOTE</strong>: if we don't verify the input to <code>.getunchecked()</code>, the caller may access whatever is stored in the location even if it is a memory address outside the slice</p>
+<a class="header" href="#fearless-concurrency--asynchrony-a-name--morea" id="fearless-concurrency--asynchrony-a-name--morea"><h2>Fearless Concurrency &amp;&amp; Asynchrony <a name = "more"></a></h2></a>
+<p>As a systems programming language, Rust provides significant flexibility with respect to low-level optimizations. Specifically, Rust provides fine-grain control over how you perform computation, delegate said computation to the OS's threads, and schedule state transitions within a given thread. There isn't space in this book to go into significant detail, but I'll try to provide resources/reading that have helped me get up to speed. For a high-level overview, Stjepan Glavina provides the following descriptions in <a href="https://stjepang.github.io/2019/01/29/lock-free-rust-crossbeam-in-2019.html">Lock-free Rust: Crossbeam in 2019</a>:</p>
+<ul>
+<li><strong><a href="https://github.com/rayon-rs/rayon">Rayon</a></strong> splits your data into distinct pieces, gives each piece to a thread to do some kind of computation on it, and finally aggregates results. Its goal is to distribute CPU-intensive tasks onto a thread pool.</li>
+<li><strong><a href="https://github.com/tokio-rs/tokio">Tokio</a></strong> runs tasks which sometimes need to be paused in order to wait for asynchronous events. Handling tons of such tasks is no problem. Its goal is to distribute IO-intensive tasks onto a thread pool.</li>
+<li><strong><a href="https://github.com/crossbeam-rs/crossbeam">Crossbeam</a></strong> is all about low-level concurrency: atomics, concurrent data structures, synchronization primitives. Same idea as the <code>std::sync</code> module, but bigger. Its goal is to provide tools on top of which libraries like Rayon and Tokio can be built.</li>
+</ul>
+<p>To dive deeper down these 🐰 holes</p>
+<ul>
+<li><a href="#async">Asynchrony</a></li>
+<li><a href="#concurrency">Concurrency</a></li>
+</ul>
+<a class="header" href="#asynchrony-a-name--asynca" id="asynchrony-a-name--asynca"><h3>Asynchrony <a name = "async"></a></h3></a>
+<p><a href="https://areweasyncyet.rs/">Are we <code>async</code> yet?</a></p>
+<p><strong>Conceptual</strong></p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=skos4B5x7qE">RustLatam 2019 - Without Boats: Zero-Cost Async IO</a></li>
+<li><a href="https://boats.gitlab.io/blog/post/wakers-i/">Introduction to Async/Await Programming (withoutboats/wakers-i):</a></li>
+<li><a href="http://aturon.github.io/2016/08/11/futures/">Futures (by Aaron Turon)</a></li>
+</ul>
+<p><strong>Projects</strong></p>
+<ul>
+<li><a href="https://github.com/rustasync">Rust Asynchronous Ecosystem Working Group</a></li>
+<li><a href="https://github.com/withoutboats/romio">romio</a></li>
+<li><a href="https://tokio.rs/docs/overview/">Tokio Docs</a></li>
+</ul>
+<a class="header" href="#concurrency-a-name--concurrencya" id="concurrency-a-name--concurrencya"><h3>Concurrency <a name = "concurrency"></a></h3></a>
+<p><strong>Conceptual</strong></p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=Dbytx0ivH7Q">Rust Concurrency Explained</a></li>
+<li><a href="https://stjepang.github.io/2019/01/29/lock-free-rust-crossbeam-in-2019.html">Lock-free Rust: Crossbeam in 2019</a></li>
+<li><a href="https://github.com/crossbeam-rs/rfcs/wiki">Crossbeam Research Meta-link</a></li>
+</ul>
+<p><strong>Projects</strong></p>
+<ul>
+<li><a href="https://github.com/spacejam/sled">sled</a></li>
+<li><a href="https://github.com/servo/servo">servo</a></li>
+<li><a href="https://github.com/tikv/tikv">TiKV</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="../safety/cop.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="../dessert/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="../safety/cop.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="../dessert/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>

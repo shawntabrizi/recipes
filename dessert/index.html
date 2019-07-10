@@ -1,0 +1,298 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Open Source Dessert - Substrate Recipes</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Substrate runtime design patterns">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body class="light">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">var path_to_root = "../";</script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { } 
+            if (theme === null || theme === undefined) { theme = 'light'; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <ol class="chapter"><li><a href="../intro/index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../intro/motivation.html"><strong aria-hidden="true">2.</strong> Motivation</a></li><li><a href="../setup/index.html"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li><a href="../event/index.html"><strong aria-hidden="true">4.</strong> Event Recipes</a></li><li><ol class="section"><li><a href="../event/adder.html"><strong aria-hidden="true">4.1.</strong> Adding Machine</a></li><li><a href="../event/balance.html"><strong aria-hidden="true">4.2.</strong> Incrementing Balances</a></li><li><a href="../event/permissioned.html"><strong aria-hidden="true">4.3.</strong> Permissioned Function with Generic Event</a></li></ol></li><li><a href="../storage/index.html"><strong aria-hidden="true">5.</strong> Storage Recipes</a></li><li><ol class="section"><li><a href="../storage/value.html"><strong aria-hidden="true">5.1.</strong> Single Value Storage</a></li><li><a href="../storage/token.html"><strong aria-hidden="true">5.2.</strong> Simple Token Transfer</a></li><li><a href="../storage/list.html"><strong aria-hidden="true">5.3.</strong> Lists as Maps</a></li><li><a href="../storage/structs.html"><strong aria-hidden="true">5.4.</strong> Nested Structs</a></li><li><a href="../storage/social.html"><strong aria-hidden="true">5.5.</strong> Naive Social Network</a></li></ol></li><li><a href="../module_menu/index.html"><strong aria-hidden="true">6.</strong> Module Menu</a></li><li><a href="../safety/index.html"><strong aria-hidden="true">7.</strong> Safety and Optimization</a></li><li><ol class="section"><li><a href="../safety/cop.html"><strong aria-hidden="true">7.1.</strong> Declarative Programming</a></li><li><a href="../safety/optimizations.html"><strong aria-hidden="true">7.2.</strong> Optimizations</a></li></ol></li><li><a href="../dessert/index.html" class="active"><strong aria-hidden="true">8.</strong> Open Source Dessert</a></li></ol>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light <span class="default">(default)</span></button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">Substrate Recipes</h1> 
+
+                        <div class="right-buttons">
+                            <a href="../print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <a class="header" href="#dessert-" id="dessert-"><h1>Dessert 🍫</h1></a>
+<p>Check out <strong><a href="https://github.com/substrate-developer-hub/awesome-substrate">awesome-substrate</a></strong> for projects, events, and all the latest Substrate news!</p>
+<a class="header" href="#a-hrefhttpsgithubcomsubstrate-developer-hubfeatured-tutorialsa" id="a-hrefhttpsgithubcomsubstrate-developer-hubfeatured-tutorialsa"><h2><a href="https://github.com/substrate-developer-hub/">Featured Tutorials</a></h2></a>
+<ul>
+<li><a href="https://github.com/substrate-developer-hub/substrate-collectables-workshop">Substrate Collectables Workshop</a></li>
+<li><a href="https://github.com/substrate-developer-hub/substrate-tcr">Substrate TCR Tutorial</a></li>
+<li><a href="https://github.com/substrate-developer-hub/substrate-contracts-workshop">Substrate Contracts Workshop</a></li>
+</ul>
+<!-- 
+**Set Up**
+* [`paritytech/substrate-up`](https://github.com/paritytech/substrate-up) - Scripts for working with new Substrate projects
+<p><strong>Consensus</strong></p>
+<ul>
+<li><a href="https://github.com/paritytech/shasper"><code>paritytech/shasper</code></a> - Parity Shasper beacon chain implementation using the Substrate framework.</li>
+<li><a href="https://github.com/paritytech/finality-grandpa"><code>paritytech/finality-grandpa</code></a> - finality gadget for blockchains using common prefix agreement</li>
+<li><a href="https://github.com/paritytech/rhododendron"><code>paritytech/rhododendron</code></a> - Asynchronously safe BFT consensus, implementation in Rust</li>
+</ul>
+<a class="header" href="#tutorials--a-name--tutorialsa" id="tutorials--a-name--tutorialsa"><h2>Tutorials 🍮 <a name = "tutorials"></a></h2></a>
+<p><a href="https://github.com/parity-samples">parity-samples</a></p>
+<ul>
+<li><a href="https://github.com/substrate-developer-hub/substrate-contracts-workshop"><code>substrate/substrate-contracts-workshop</code></a></li>
+<li><a href="https://github.com/shawntabrizi/substrate-collectables-workshop"><code>shawntabrizi/substrate-collectables-workshop</code></a> - A guided tutorial for building a collectable dApp chain on Parity Substrate</li>
+<li><a href="https://github.com/parity-samples/substrate-tcr"><code>parity-samples/substrate-tcr</code></a> - A Parity Substrate runtime implementation of a simple Token Curated Registry (TCR)</li>
+<li><a href="https://github.com/gautamdhameja/substrate-poa"><code>gautamdhameja/substrate-poa</code></a> - A Substrate runtime which allows addition of new validators in a pure PoA fashion</li>
+<li><a href="https://github.com/parity-samples/substrate-tcr-ui"><code>parity-samples/substrate-tcr-ui</code></a> - A react.js frontend for Substrate TCR runtime</li>
+<li><a href="https://github.com/shawntabrizi/substrate-package"><code>shawntabrizi/substrate-package</code></a> - A stable package of the substrate-node-template and substrate-ui</li>
+<li><a href="https://github.com/lsaether/sr-bonded-token/blob/master/Tutorial.md"><code>lsaether/sr-bonded-token</code></a> - Token Bonding Curve tutorial with Substrate</li>
+<li><a href="https://github.com/nczhu/collateral"><code>nczhu/collateral</code></a> collateralize NFTs</li>
+<li><a href="https://github.com/yjkimjunior/ParkingSpaceSubstrate"><code>yjkimjunior/ParkingSpaceSubstrate</code></a></li>
+<li><a href="https://github.com/osuketh/apple-store-substrate"><code>osuketh/apple-store-substrate</code></a></li>
+</ul>
+<a class="header" href="#user-interface--a-name--uia" id="user-interface--a-name--uia"><h2>User Interface 🍦 <a name = "ui"></a></h2></a>
+<ul>
+<li><a href="https://github.com/paritytech/oo7"><code>paritytech/oo7</code></a> - The Bonds framework along with associated modules</li>
+<li><a href="https://github.com/paritytech/substrate-light-ui"><code>paritytech/substrate-light-ui</code></a> - User interface optimized for the Substrate light client</li>
+<li><a href="https://github.com/paritytech/apps"><code>paritytech/apps</code></a> - Basic Polkadot/Substrate UI for interacting with a node</li>
+<li><a href="https://github.com/paritytech/substrate-ui"><code>paritytech/substrate-ui</code></a> - Bondy Polkadot UI</li>
+</ul>
+<a class="header" href="#off-chain-interaction---a-name--offchaina" id="off-chain-interaction---a-name--offchaina"><h2>Off-Chain Interaction  🍨 <a name = "offchain"></a></h2></a>
+<ul>
+<li><a href="https://github.com/PACTCare/Starlog"><code>PACTCare/starlog</code></a> - Starlog: IPFS Metadata Blockchain based on Substrate</li>
+<li><a href="https://github.com/parity-samples/substrate-events-listener"><code>parity-samples/substrate-events-listener</code></a> - Dockerized websocket listener for substrate events; also writes filtered event data to configured storage</li>
+<li><a href="https://github.com/parity-samples/substrate-proof-of-existence"><code>parity-samples/substrate-proof-of-existence</code></a> - Proof of Existence Blockchain built on Parity's Substrate</li>
+<li><a href="https://github.com/stakedtechnologies/Plasm"><code>stakedtechnologies/Plasma</code></a> - add Plasma functions to the Substrate chain</li>
+</ul>
+<a class="header" href="#polkadot--a-name--polkadota" id="polkadot--a-name--polkadota"><h2>Polkadot 🎂 <a name = "polkadot"></a></h2></a>
+<ul>
+<li><a href="https://github.com/paritytech/cumulus"><code>paritytech/cumulus</code></a> - Write Parachains on Substrate</li>
+<li><a href="https://github.com/paritytech/polkadot"><code>paritytech/polkadot</code></a> - Polkadot Node Implementation</li>
+<li><a href="https://github.com/paritytech/substrate-telemetry"><code>paritytech/substrate-telemetry</code></a> - Polkadot telemetry service</li>
+</ul>
+<a class="header" href="#smart-contracts--a-name--contractsa" id="smart-contracts--a-name--contractsa"><h2>Smart Contracts 🍬 <a name = "contracts"></a></h2></a>
+<ul>
+<li><a href="https://github.com/hicommonwealth/edgeware-node"><code>hicommonwealth/edgeware-node</code></a> - Substrate node implementing all our edgeware features</li>
+<li><a href="https://github.com/paritytech/fleetwood"><code>paritytech/fleetwood</code></a> - Testbed repo for trying out ideas of what a smart contract API in Rust would look like</li>
+<li><a href="https://github.com/parity-samples/substrate-erc721"><code>parity-samples/substrate-erc721</code></a> - An implementation of ERC721 built on Parity Substrate</li>
+</ul>
+<a class="header" href="#webassembly-a-name--wasma" id="webassembly-a-name--wasma"><h2>WebAssembly 🍭<a name = "wasm"></a></h2></a>
+<ul>
+<li><a href="https://github.com/paritytech/wasmi"><code>paritytech/wasmi</code></a> - Wasm interpreter in Rust https://paritytech.github.io/wasmi/</li>
+<li><a href="https://github.com/paritytech/pwasm-token-example"><code>paritytech/pwasm-token-example</code></a> - A simple ERC-20 compatible token contract written in Rust compiled into WebAssembly</li>
+<li><a href="https://github.com/paritytech/pwasm-tutorial"><code>paritytech/pwasm-tutorial</code></a> - A step-by-step tutorial on how to write contracts in Wasm for Kovan</li>
+<li><a href="https://github.com/paritytech/parity-wasm"><code>paritytech/parity-wasm</code></a>- WebAssembly serialization/deserialization in rust</li>
+<li><a href="https://github.com/paritytech/pwasm-std"><code>paritytech/pwasm-std</code></a> - WASM contracts standard library for Rust</li>
+<li><a href="https://github.com/paritytech/pwasm-abi"><code>paritytech/pwasm-abi</code></a> - Parity WASM Abi (Legacy and new)</li>
+<li><a href="https://github.com/paritytech/pwasm-test"><code>paritytech/pwasm-test</code></a> - pwasm-test is a set of tools to make it easy to test internal logic of contracts written using pwasm-std</li>
+<li><a href="https://github.com/paritytech/pwasm-ethereum"><code>paritytech/pwasm-ethereum</code></a></li>
+<li><a href="https://github.com/paritytech/wasm-utils"><code>paritytech/wasm-utils</code></a></li>
+</ul>
+<a class="header" href="#cryptography--a-name--cryptoa" id="cryptography--a-name--cryptoa"><h2>Cryptography 🍰 <a name = "crypto"></a></h2></a>
+<ul>
+<li><a href="https://github.com/mixbytes/substrate-module-multisig"><code>mixbytes/substrate-module-multisig</code></a></li>
+<li><a href="https://github.com/filiplazovic/substrate-merkle-tree"><code>filiplazovic/substrate-merkle-tree</code></a></li>
+<li><a href="https://github.com/LayerXcom/bellman-substrate"><code>LayerXcom/bellman-substrate</code></a> - A library for supporting zk-SNARKs to Substrate</li>
+<li><a href="https://github.com/LayerXcom/zero-chain"><code>LayerXcom/zero-chain</code></a>  - A privacy-oriented blockchain on Substrate</li>
+<li><a href="https://github.com/paritytech/substrate-bip39"><code>paritytech/substrate-bip39</code></a>  - deriving secret keys for Ristretto compressed Ed25519 (should be compatible with Ed25519 at this time) from BIP39 phrases</li>
+<li><a href="https://github.com/paritytech/schnorrkel-js"><code>paritytech/schnorrkel-js</code></a> - a Javascript wrapper for schnorrkel signatures on Ristretto using WebAssembly.</li>
+</ul>
+<a class="header" href="#more-open-source-projects--a-name--ossa" id="more-open-source-projects--a-name--ossa"><h2>More Open Source Projects 🍪 <a name = "oss"></a></h2></a>
+<p><strong>Fund Coordination DAO</strong></p>
+<ul>
+<li><a href="https://github.com/4meta5/SunshineDAO"><code>4meta5/SunshineDAO</code></a></li>
+</ul>
+<p><strong>Decentralized Asset Management</strong></p>
+<ul>
+<li><a href="https://github.com/chainx-org/ChainX"><code>chainx-org/ChainX</code></a> - Fully Decentralized Cross-chain Crypto Asset Management on Polkadot <a href="https://chainx.org">chainx</a>, <a href="https://hackmd.io/p_v1M8WGRyy9PggYiKA_Xw#">development notes</a></li>
+</ul>
+<p><strong>Payment Channels</strong></p>
+<ul>
+<li><a href="https://github.com/AdExNetwork/adex-protocol-substrate"><code>AdExNetwork/adex-protocol-substrate</code></a> - Substrate implementation of the AdEx Protocol v4: OUTPACE &amp; Registry <a href="https://www.adex.network/">adex</a></li>
+</ul>
+<p><strong>Identity Registration and Verification</strong></p>
+<ul>
+<li><a href="https://github.com/hicommonwealth/edge-identity"><code>hicommonwealth/edge-identity</code></a> - Identity registration and verification for substrate chains</li>
+</ul>
+<p><strong>User Governed Video Platform</strong></p>
+<ul>
+<li><a href="https://github.com/Joystream/substrate-runtime-joystream"><code>Joystream/substrate-runtime-joystream</code></a></li>
+</ul>
+<p><strong>Token Economics</strong></p>
+<ul>
+<li><a href="https://github.com/lsaether/sr-bonded-token"><code>isaether/sr-bonded-curve</code></a></li>
+</ul>
+<p><strong>Robotics</strong></p>
+<ul>
+<li><a href="https://github.com/airalab/substrate-node-robonomics"><code>airalab/substrate-node-robonomics</code></a> - Substrate Node for Robonomics network <a href="https://telemetry.polkadot.io/#/Robonomics">telemetry</a> --&gt;</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="../safety/optimizations.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="../safety/optimizations.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>
